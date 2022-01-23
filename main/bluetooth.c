@@ -1,3 +1,4 @@
+#include "esp_bt_defs.h"
 #include <esp_bt.h>
 #include <esp_bt_main.h>
 #include <esp_err.h>
@@ -7,6 +8,11 @@
 static const char *TAG = "ruuvi-gw-bluetooth";
 
 static esp_ble_scan_params_t ruuvi_gw_bluetooth_scan_params = {
+  .scan_type = BLE_SCAN_TYPE_ACTIVE,
+  .own_addr_type = BLE_ADDR_TYPE_PUBLIC,
+  .scan_filter_policy = BLE_SCAN_FILTER_ALLOW_ALL,
+  .scan_interval = 0x50,
+  .scan_window = 0x30
 };
 
 static void ruuvi_gw_bluetooth_gap_cb(esp_gap_ble_cb_event_t event,

@@ -4,6 +4,5 @@
 #include <esp_err.h>
 
 esp_err_t ruuvi_gw_bluetooth_init(void);
-esp_err_t ruuvi_gw_bluetooth_deinit(void);
 
 #endif

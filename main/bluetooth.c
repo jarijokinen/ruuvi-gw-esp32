@@ -1,4 +1,3 @@
-#include "esp_bt_defs.h"
 #include <esp_bt.h>
 #include <esp_bt_main.h>
 #include <esp_err.h>
@@ -18,6 +17,55 @@ static esp_ble_scan_params_t ruuvi_gw_bluetooth_scan_params = {
 static void ruuvi_gw_bluetooth_gap_cb(esp_gap_ble_cb_event_t event,
     esp_ble_gap_cb_param_t *param)
 {
+  esp_err_t err;
+
+  switch (event) {
+    case ESP_GAP_BLE_SCAN_PARAM_SET_COMPLETE_EVT: {
+      ESP_LOGI(TAG, "BLE scan params set");
+      err = esp_ble_gap_start_scanning(10);
+      if (err != ESP_OK) {
+        ESP_LOGE(TAG, "BLE scan start failed");
+      }
+      break;
+    }
+    case ESP_GAP_BLE_SCAN_START_COMPLETE_EVT: {
+      ESP_LOGI(TAG, "BLE scan started");
+      break;
+    }
+    case ESP_GAP_BLE_SCAN_RESULT_EVT: {
+      esp_ble_gap_cb_param_t *res = (esp_ble_gap_cb_param_t *)param;
+
+      switch (res->scan_rst.search_evt) {
+        case ESP_GAP_SEARCH_INQ_RES_EVT: {
+          if (res->scan_rst.adv_data_len == 0 ||
+              res->scan_rst.ble_adv[5] != 0x99 ||
+              res->scan_rst.ble_adv[6] != 0x04) {
+            /* Data length zero or manufacturer does not match */
+            break;
+          }
+
+          /* Data format */
+          switch (res->scan_rst.ble_adv[7]) {
+            case 0x05: {
+              ESP_LOGI(TAG, "Got measurement data - data format 0x05");
+            }
+          }
+
+          break;
+        }
+        case ESP_GAP_SEARCH_INQ_CMPL_EVT: {
+          ESP_LOGI(TAG, "BLE scan stopped");
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    }
+    default: {
+      break;
+    }
+  }
 }
 
 esp_err_t ruuvi_gw_bluetooth_init(void)
@@ -68,36 +116,5 @@ esp_err_t ruuvi_gw_bluetooth_init(void)
     return err;
   }
 
-  return ESP_OK;
-}
-
-esp_err_t ruuvi_gw_bluetooth_deinit(void)
-{
-  esp_err_t err;
-
-  err = esp_bluedroid_disable();
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "Bluetooth disable failed");
-    return err;
-  }
-
-  err = esp_bluedroid_deinit();
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "Bluetooth resource de-initialization failed");
-    return err;
-  }
-  
-  err = esp_bt_controller_disable();
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "Bluetooth controller disable failed");
-    return err;
-  }
-  
-  err = esp_bt_controller_deinit();
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "Bluetooth controller de-initialization failed");
-    return err;
-  }
-  
   return ESP_OK;
 }

@@ -47,7 +47,26 @@ static void ruuvi_gw_bluetooth_gap_cb(esp_gap_ble_cb_event_t event,
           /* Data format */
           switch (res->scan_rst.ble_adv[7]) {
             case 0x05: {
-              ESP_LOGI(TAG, "Got measurement data - data format 0x05");
+              char bda[18];
+
+              sprintf(bda, "%02X:%02X:%02X:%02X:%02X:%02X",
+                  res->scan_rst.bda[0],
+                  res->scan_rst.bda[1],
+                  res->scan_rst.bda[2],
+                  res->scan_rst.bda[3],
+                  res->scan_rst.bda[4],
+                  res->scan_rst.bda[5]);
+              float temperature = ((res->scan_rst.ble_adv[8] << 8) |
+                res->scan_rst.ble_adv[9]) * 0.005;
+              float humidity = ((res->scan_rst.ble_adv[10] << 8) |
+                res->scan_rst.ble_adv[11]) * 0.0025;
+
+              ESP_LOGI(TAG, "");
+              ESP_LOGI(TAG, "Bluetooth Device Address: %s", bda);
+              ESP_LOGI(TAG, "Temperature:              %.2f C", temperature);
+              ESP_LOGI(TAG, "Humidity:                 %.2f %%", humidity);
+
+              break;
             }
           }
 

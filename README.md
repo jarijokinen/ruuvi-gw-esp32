@@ -14,13 +14,13 @@ This firmware currently supports only RuuviTag data format 5.
 
 The log should look like this:
 
-    I (1335) ruuvi-gw: ** RuuviTag: FE:5A:35:C2:05:DD
-    I (1345) ruuvi-gw: Temperature: 24.93 C
-    I (1345) ruuvi-gw: Humidity:    15.00 %
-    I (3985) ruuvi-gw: 
-    I (3985) ruuvi-gw: ** RuuviTag: E8:2B:AE:08:AA:F9
-    I (3985) ruuvi-gw: Temperature: 22.34 C
-    I (3995) ruuvi-gw: Humidity:    14.00 %
+    I (6102) ruuvi-gw-bluetooth: Bluetooth Device Address: C0:09:D8:69:A8:01
+    I (6112) ruuvi-gw-bluetooth: Temperature:              22.06 C
+    I (6112) ruuvi-gw-bluetooth: Humidity:                 26.26 %
+    I (9412) ruuvi-gw-bluetooth: 
+    I (9412) ruuvi-gw-bluetooth: Bluetooth Device Address: EE:57:0F:54:B7:94
+    I (9412) ruuvi-gw-bluetooth: Temperature:              22.26 C
+    I (9422) ruuvi-gw-bluetooth: Humidity:                 24.96 %
 
 ## License
 

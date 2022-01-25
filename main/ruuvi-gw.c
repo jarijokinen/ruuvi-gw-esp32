@@ -2,6 +2,7 @@
 #include <nvs_flash.h>
 
 #include "bluetooth.h"
+#include "mqtt.h"
 #include "wifi.h"
 
 static const char *TAG = "ruuvi-gw";
@@ -15,4 +16,6 @@ void app_main(void)
 
   ESP_ERROR_CHECK(ruuvi_gw_bluetooth_init());
   ESP_LOGI(TAG, "Bluetooth initialized");
+
+  ESP_ERROR_CHECK(ruuvi_gw_mqtt_init());
 }

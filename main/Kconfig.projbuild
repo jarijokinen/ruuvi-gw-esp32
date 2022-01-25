@@ -5,5 +5,17 @@ menu "RuuviTag Gateway Configuration"
 
     config RUUVI_GW_WIFI_PSK
       string "WiFi Password"
+    
+    config RUUVI_GW_MQTT_ENDPOINT
+      string "MQTT Endpoint"
+      help
+          MQTT Endpoint, format: mqtts://endpoint:8883
+     
+    config RUUVI_GW_MQTT_CLIENT_ID
+      string "MQTT Client ID"
+      default "ruuvi-gw-esp32"
+    
+    config RUUVI_GW_MQTT_TOPIC
+      string "MQTT Topic"
 
 endmenu

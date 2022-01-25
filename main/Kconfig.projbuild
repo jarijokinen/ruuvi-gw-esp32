@@ -1,0 +1,9 @@
+menu "RuuviTag Gateway Configuration"
+
+    config RUUVI_GW_WIFI_SSID
+      string "WiFi SSID"
+
+    config RUUVI_GW_WIFI_PSK
+      string "WiFi Password"
+
+endmenu

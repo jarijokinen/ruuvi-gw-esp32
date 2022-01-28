@@ -3,6 +3,10 @@
 #include <esp_err.h>
 #include <esp_gap_ble_api.h>
 #include <esp_log.h>
+#include <freertos/ringbuf.h>
+
+#include "measurement_data.h"
+#include "mqtt.h"
 
 static const char *TAG = "ruuvi-gw-bluetooth";
 
@@ -47,24 +51,21 @@ static void ruuvi_gw_bluetooth_gap_cb(esp_gap_ble_cb_event_t event,
           /* Data format */
           switch (res->scan_rst.ble_adv[7]) {
             case 0x05: {
-              char bda[18];
+              measurement_data_t measurement = {};
 
-              sprintf(bda, "%02X:%02X:%02X:%02X:%02X:%02X",
+              sprintf(measurement.bda, "%02X:%02X:%02X:%02X:%02X:%02X",
                   res->scan_rst.bda[0],
                   res->scan_rst.bda[1],
                   res->scan_rst.bda[2],
                   res->scan_rst.bda[3],
                   res->scan_rst.bda[4],
                   res->scan_rst.bda[5]);
-              float temperature = ((res->scan_rst.ble_adv[8] << 8) |
+               measurement.temperature = ((res->scan_rst.ble_adv[8] << 8) |
                 res->scan_rst.ble_adv[9]) * 0.005;
-              float humidity = ((res->scan_rst.ble_adv[10] << 8) |
+               measurement.humidity = ((res->scan_rst.ble_adv[10] << 8) |
                 res->scan_rst.ble_adv[11]) * 0.0025;
 
-              ESP_LOGI(TAG, "");
-              ESP_LOGI(TAG, "Bluetooth Device Address: %s", bda);
-              ESP_LOGI(TAG, "Temperature:              %.2f C", temperature);
-              ESP_LOGI(TAG, "Humidity:                 %.2f %%", humidity);
+              ruuvi_gw_mqtt_add_measurement(measurement);
 
               break;
             }

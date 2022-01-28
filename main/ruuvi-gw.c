@@ -4,13 +4,13 @@
 #include "bluetooth.h"
 #include "mqtt.h"
 #include "wifi.h"
-
+  
 static const char *TAG = "ruuvi-gw";
 
 void app_main(void)
 {
   ESP_ERROR_CHECK(nvs_flash_init());
-  
+
   ESP_ERROR_CHECK(ruuvi_gw_wifi_init());
   ESP_LOGI(TAG, "WiFi initialized");
 

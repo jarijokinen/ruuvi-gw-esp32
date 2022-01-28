@@ -138,3 +138,34 @@ esp_err_t ruuvi_gw_bluetooth_init(void)
 
   return ESP_OK;
 }
+
+esp_err_t ruuvi_gw_bluetooth_destroy(void)
+{
+  esp_err_t err;
+
+  err = esp_bluedroid_disable();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "Bluetooth disable failed");
+    return err;
+  }
+
+  err = esp_bluedroid_deinit();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "Bluetooth resource de-initialization failed");
+    return err;
+  }
+
+  err = esp_bt_controller_disable();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "Bluetooth controller disable failed");
+    return err;
+  }
+
+  err = esp_bt_controller_deinit();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "Bluetooth controller de-initialization failed");
+    return err;
+  }
+
+  return ESP_OK;
+}

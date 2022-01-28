@@ -33,7 +33,11 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
       for (;;) {
         size_t measurement_size;
         measurement_data_t *measurement = xRingbufferReceive(measurements, 
-            &measurement_size, pdMS_TO_TICKS(3000));
+            &measurement_size, 10 * 1000 / portTICK_PERIOD_MS);
+
+        if (measurement == NULL) {
+          break;
+        }
 
         ESP_LOGI(TAG, "");
         ESP_LOGI(TAG, "Device Address: %s", measurement->bda);

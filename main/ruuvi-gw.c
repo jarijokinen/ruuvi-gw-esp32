@@ -1,10 +1,15 @@
 #include <esp_log.h>
+#include <esp_sleep.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 #include <nvs_flash.h>
 
 #include "bluetooth.h"
 #include "mqtt.h"
 #include "wifi.h"
-  
+
+#define SLEEP_TIME 1000000 * 60 * 1
+
 static const char *TAG = "ruuvi-gw";
 
 void app_main(void)
@@ -18,4 +23,13 @@ void app_main(void)
   ESP_LOGI(TAG, "Bluetooth initialized");
 
   ESP_ERROR_CHECK(ruuvi_gw_mqtt_init());
+
+  vTaskDelay(30 * 1000 / portTICK_PERIOD_MS);
+  
+  ESP_ERROR_CHECK(ruuvi_gw_bluetooth_destroy());
+  ESP_ERROR_CHECK(ruuvi_gw_wifi_destroy());
+
+  ESP_LOGI(TAG, "Entering deep-sleep mode...");
+  vTaskDelay(3 * 1000 / portTICK_PERIOD_MS);
+  esp_deep_sleep(SLEEP_TIME);
 }

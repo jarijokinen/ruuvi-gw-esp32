@@ -144,3 +144,22 @@ esp_err_t ruuvi_gw_wifi_init(void)
 
   return ESP_OK;
 }
+
+esp_err_t ruuvi_gw_wifi_destroy(void)
+{
+  esp_err_t err;
+
+  err = esp_wifi_stop();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "Failed to stop WiFi");
+    return err;
+  }
+
+  err = esp_wifi_deinit();
+  if (err != ESP_OK) {
+    ESP_LOGE(TAG, "WiFi de-initialization failed");
+    return err;
+  }
+
+  return ESP_OK;
+}

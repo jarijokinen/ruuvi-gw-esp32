@@ -26,7 +26,7 @@ static void ruuvi_gw_bluetooth_gap_cb(esp_gap_ble_cb_event_t event,
   switch (event) {
     case ESP_GAP_BLE_SCAN_PARAM_SET_COMPLETE_EVT: {
       ESP_LOGI(TAG, "BLE scan params set");
-      err = esp_ble_gap_start_scanning(10);
+      err = esp_ble_gap_start_scanning(CONFIG_RUUVI_GW_BLUETOOTH_SCAN_DURATION);
       if (err != ESP_OK) {
         ESP_LOGE(TAG, "BLE scan start failed");
       }

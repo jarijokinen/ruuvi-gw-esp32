@@ -6,9 +6,8 @@
 
 #include "bluetooth.h"
 #include "mqtt.h"
+#include "sdkconfig.h"
 #include "wifi.h"
-
-#define SLEEP_TIME 1000000 * 60 * 1
 
 static const char *TAG = "ruuvi-gw";
 
@@ -24,12 +23,10 @@ void app_main(void)
 
   ESP_ERROR_CHECK(ruuvi_gw_mqtt_init());
 
-  vTaskDelay(30 * 1000 / portTICK_PERIOD_MS);
-  
   ESP_ERROR_CHECK(ruuvi_gw_bluetooth_destroy());
   ESP_ERROR_CHECK(ruuvi_gw_wifi_destroy());
 
   ESP_LOGI(TAG, "Entering deep-sleep mode...");
   vTaskDelay(3 * 1000 / portTICK_PERIOD_MS);
-  esp_deep_sleep(SLEEP_TIME);
+  esp_deep_sleep(1000000 * 60 * CONFIG_RUUVI_GW_POLLING_INTERVAL);
 }

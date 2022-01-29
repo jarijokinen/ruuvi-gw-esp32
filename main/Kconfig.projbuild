@@ -17,5 +17,23 @@ menu "RuuviTag Gateway Configuration"
     
     config RUUVI_GW_MQTT_TOPIC
       string "MQTT Topic"
+    
+    config RUUVI_GW_MQTT_TIMEOUT
+      int "MQTT Timeout"
+      default 30
+      help
+          MQTT timeout in seconds
+    
+    config RUUVI_GW_POLLING_INTERVAL
+      int "Polling Interval"
+      default 2
+      help
+          Measurement polling interval in minutes
+    
+    config RUUVI_GW_BLUETOOTH_SCAN_DURATION
+      int "Bluetooth Scan Duration"
+      default 10
+      help
+          Bluetooth scan duration in seconds
 
 endmenu

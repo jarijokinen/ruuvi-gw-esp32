@@ -60,22 +60,26 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
         sprintf(topic, "%s/%s/temperature", CONFIG_RUUVI_GW_MQTT_TOPIC, 
             measurement->bda);
         sprintf(data, "%.2f", measurement->temperature);
-        esp_mqtt_client_publish(client, topic, data, 0, 1, 0);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
         
         sprintf(topic, "%s/%s/humidity", CONFIG_RUUVI_GW_MQTT_TOPIC, 
             measurement->bda);
         sprintf(data, "%.2f", measurement->humidity);
-        esp_mqtt_client_publish(client, topic, data, 0, 1, 0);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
 
         sprintf(topic, "%s/%s/pressure", CONFIG_RUUVI_GW_MQTT_TOPIC,
             measurement->bda);
         sprintf(data, "%d", measurement->pressure);
-        esp_mqtt_client_publish(client, topic, data, 0, 1, 0);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
 
         sprintf(topic, "%s/%s/moves", CONFIG_RUUVI_GW_MQTT_TOPIC,
             measurement->bda);
         sprintf(data, "%d", measurement->moves);
-        esp_mqtt_client_publish(client, topic, data, 0, 1, 0);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
       }
       
       break;

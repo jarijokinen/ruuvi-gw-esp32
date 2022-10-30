@@ -17,6 +17,14 @@ menu "RuuviTag Gateway Configuration"
     
     config RUUVI_GW_MQTT_TOPIC
       string "MQTT Topic"
+
+    config RUUVI_GW_MQTT_QOS
+      int "MQTT QoS"
+      default 0
+
+    config RUUVI_GW_MQTT_RETAIN
+      int "MQTT retain flag"
+      default 0
     
     config RUUVI_GW_MQTT_TIMEOUT
       int "MQTT Timeout"

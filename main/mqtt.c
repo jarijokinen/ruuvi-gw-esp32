@@ -51,6 +51,8 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
         ESP_LOGI(TAG, "Device Address: %s", measurement->bda);
         ESP_LOGI(TAG, "Temperature:    %.2f C", measurement->temperature);
         ESP_LOGI(TAG, "Humidity:       %.2f %%", measurement->humidity);
+        ESP_LOGI(TAG, "Pressure:       %d hPa", measurement->pressure);
+        ESP_LOGI(TAG, "Moves:          %d", measurement->moves);
     
         char topic[100];
         char data[10];
@@ -63,6 +65,16 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
         sprintf(topic, "%s/%s/humidity", CONFIG_RUUVI_GW_MQTT_TOPIC, 
             measurement->bda);
         sprintf(data, "%.2f", measurement->humidity);
+        esp_mqtt_client_publish(client, topic, data, 0, 1, 0);
+
+        sprintf(topic, "%s/%s/pressure", CONFIG_RUUVI_GW_MQTT_TOPIC,
+            measurement->bda);
+        sprintf(data, "%d", measurement->pressure);
+        esp_mqtt_client_publish(client, topic, data, 0, 1, 0);
+
+        sprintf(topic, "%s/%s/moves", CONFIG_RUUVI_GW_MQTT_TOPIC,
+            measurement->bda);
+        sprintf(data, "%d", measurement->moves);
         esp_mqtt_client_publish(client, topic, data, 0, 1, 0);
       }
       

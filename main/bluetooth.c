@@ -64,6 +64,9 @@ static void ruuvi_gw_bluetooth_gap_cb(esp_gap_ble_cb_event_t event,
                 res->scan_rst.ble_adv[9]) * 0.005;
                measurement.humidity = ((res->scan_rst.ble_adv[10] << 8) |
                 res->scan_rst.ble_adv[11]) * 0.0025;
+               measurement.pressure = (((res->scan_rst.ble_adv[12] << 8) |
+                res->scan_rst.ble_adv[13]) + 50000) / 100;
+               measurement.moves = res->scan_rst.ble_adv[22];
 
               ruuvi_gw_mqtt_add_measurement(measurement);
 

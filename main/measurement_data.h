@@ -5,6 +5,8 @@ typedef struct measurement_data_t {
   char bda[18];
   float temperature;
   float humidity;
+  int pressure;
+  int moves;
 } measurement_data_t;
 
 #endif

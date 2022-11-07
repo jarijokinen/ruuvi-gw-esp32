@@ -5,6 +5,9 @@ menu "RuuviTag Gateway Configuration"
 
     config RUUVI_GW_WIFI_PSK
       string "WiFi Password"
+
+    config RUUVI_GW_MQTT_CLIENTCERT
+      bool "MQTT TLS Client Certificates"
     
     config RUUVI_GW_MQTT_ENDPOINT
       string "MQTT Endpoint"

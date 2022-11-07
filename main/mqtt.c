@@ -20,12 +20,14 @@ static esp_mqtt_client_handle_t ruuvi_gw_mqtt_client;
 static RingbufHandle_t measurements;
 static int ruuvi_gw_mqtt_state = RUUVI_GW_MQTT_STATE_NULL;
 
-extern const uint8_t server_crt_pem_start[] asm("_binary_server_crt_pem_start");
-extern const uint8_t server_crt_pem_end[] asm("_binary_server_crt_pem_end");
-extern const uint8_t client_crt_pem_start[] asm("_binary_client_crt_pem_start");
-extern const uint8_t client_crt_pem_end[] asm("_binary_client_crt_pem_end");
-extern const uint8_t client_key_pem_start[] asm("_binary_client_key_pem_start");
-extern const uint8_t client_key_pem_end[] asm("_binary_client_key_pem_end");
+#if CONFIG_RUUVI_GW_MQTT_CLIENTCERT
+  extern const uint8_t server_crt_pem_start[] asm("_binary_server_crt_pem_start");
+  extern const uint8_t server_crt_pem_end[] asm("_binary_server_crt_pem_end");
+  extern const uint8_t client_crt_pem_start[] asm("_binary_client_crt_pem_start");
+  extern const uint8_t client_crt_pem_end[] asm("_binary_client_crt_pem_end");
+  extern const uint8_t client_key_pem_start[] asm("_binary_client_key_pem_start");
+  extern const uint8_t client_key_pem_end[] asm("_binary_client_key_pem_end");
+#endif
 
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
     int32_t event_id, void *event_data)
@@ -113,11 +115,14 @@ esp_err_t ruuvi_gw_mqtt_init()
 
   esp_mqtt_client_config_t mqtt_cfg = {
     .uri = CONFIG_RUUVI_GW_MQTT_ENDPOINT,
-    .cert_pem = (const char *)server_crt_pem_start,
-    .client_cert_pem = (const char *)client_crt_pem_start,
-    .client_key_pem = (const char *)client_key_pem_start,
     .client_id = CONFIG_RUUVI_GW_MQTT_CLIENT_ID
   };
+
+#if CONFIG_RUUVI_GW_MQTT_CLIENTCERT
+  mqtt_cfg.cert_pem = (const char *)server_crt_pem_start;
+  mqtt_cfg.client_cert_pem = (const char *)client_crt_pem_start;
+  mqtt_cfg.client_key_pem = (const char *)client_key_pem_start;
+#endif
 
   ruuvi_gw_mqtt_client = esp_mqtt_client_init(&mqtt_cfg);
   esp_mqtt_client_register_event(ruuvi_gw_mqtt_client, ESP_EVENT_ANY_ID, 

@@ -6,6 +6,7 @@
 #include <sdkconfig.h>
 
 #include "mqtt.h"
+#include "ethers.h"
 
 #define RUUVI_GW_MQTT_TOPIC(bda) CONFIG_RUUVI_GW_MQTT_TOPIC "/" bda
 
@@ -51,6 +52,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
 
         ESP_LOGI(TAG, "");
         ESP_LOGI(TAG, "Device Address: %s", measurement->bda);
+        ESP_LOGI(TAG, "Device Name:    %s", measurement->name);
         ESP_LOGI(TAG, "Temperature:    %.2f C", measurement->temperature);
         ESP_LOGI(TAG, "Humidity:       %.2f %%", measurement->humidity);
         ESP_LOGI(TAG, "Pressure:       %d hPa", measurement->pressure);
@@ -60,25 +62,25 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
         char data[10];
 
         sprintf(topic, "%s/%s/temperature", CONFIG_RUUVI_GW_MQTT_TOPIC, 
-            measurement->bda);
+            measurement->name);
         sprintf(data, "%.2f", measurement->temperature);
         esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
             CONFIG_RUUVI_GW_MQTT_RETAIN);
         
         sprintf(topic, "%s/%s/humidity", CONFIG_RUUVI_GW_MQTT_TOPIC, 
-            measurement->bda);
+            measurement->name);
         sprintf(data, "%.2f", measurement->humidity);
         esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
             CONFIG_RUUVI_GW_MQTT_RETAIN);
 
         sprintf(topic, "%s/%s/pressure", CONFIG_RUUVI_GW_MQTT_TOPIC,
-            measurement->bda);
+            measurement->name);
         sprintf(data, "%d", measurement->pressure);
         esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
             CONFIG_RUUVI_GW_MQTT_RETAIN);
 
         sprintf(topic, "%s/%s/moves", CONFIG_RUUVI_GW_MQTT_TOPIC,
-            measurement->bda);
+            measurement->name);
         sprintf(data, "%d", measurement->moves);
         esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
             CONFIG_RUUVI_GW_MQTT_RETAIN);
@@ -104,6 +106,9 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
 
 void ruuvi_gw_mqtt_add_measurement(measurement_data_t measurement)
 {
+  if(ruuvi_gw_ether_to_name(measurement.bda, measurement.name, sizeof(measurement.name)) != 0)
+      strcpy(measurement.name, measurement.bda);
+
   xRingbufferSend(measurements, &measurement, sizeof(measurement), 
       pdMS_TO_TICKS(1000));
 }

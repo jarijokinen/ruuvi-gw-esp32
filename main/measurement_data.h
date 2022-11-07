@@ -2,6 +2,7 @@
 #define RUUVI_GW_MEASUREMENT_DATA_H
 
 typedef struct measurement_data_t {
+  char name[25];
   char bda[18];
   float temperature;
   float humidity;

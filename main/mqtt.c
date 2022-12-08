@@ -1,6 +1,7 @@
 #include <esp_err.h>
 #include <esp_log.h>
 #include <esp_tls.h>
+#include <freertos/FreeRTOS.h>
 #include <freertos/ringbuf.h>
 #include <mqtt_client.h>
 #include <sdkconfig.h>
@@ -134,16 +135,27 @@ esp_err_t ruuvi_gw_mqtt_init()
     return ESP_FAIL;
   }
 
-  esp_mqtt_client_config_t mqtt_cfg = {
-    .uri = CONFIG_RUUVI_GW_MQTT_ENDPOINT,
-    .client_id = CONFIG_RUUVI_GW_MQTT_CLIENT_ID
-  };
+  esp_mqtt_client_config_t mqtt_cfg = {};
 
-#if CONFIG_RUUVI_GW_MQTT_CLIENTCERT
-  mqtt_cfg.cert_pem = (const char *)server_crt_pem_start;
-  mqtt_cfg.client_cert_pem = (const char *)client_crt_pem_start;
-  mqtt_cfg.client_key_pem = (const char *)client_key_pem_start;
-#endif
+  #if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 0, 0)
+    mqtt_cfg.broker.address.uri = CONFIG_RUUVI_GW_MQTT_ENDPOINT;
+    mqtt_cfg.credentials.client_id = CONFIG_RUUVI_GW_MQTT_CLIENT_ID;
+
+    #if CONFIG_RUUVI_GW_MQTT_CLIENTCERT
+      mqtt_cfg.broker.verification.certificate = (const char *)server_crt_pem_start;
+      mqtt_cfg.authentication.certificate = (const char *)client_crt_pem_start;
+      mqtt_cfg.authentication.key = (const char *)client_key_pem_start;
+    #endif
+  #else
+    mqtt_cfg.uri = CONFIG_RUUVI_GW_MQTT_ENDPOINT;
+    mqtt_cfg.client_id = CONFIG_RUUVI_GW_MQTT_CLIENT_ID;
+
+    #if CONFIG_RUUVI_GW_MQTT_CLIENTCERT
+      mqtt_cfg.cert_pem = (const char *)server_crt_pem_start;
+      mqtt_cfg.client_cert_pem = (const char *)client_crt_pem_start;
+      mqtt_cfg.client_key_pem = (const char *)client_key_pem_start;
+    #endif
+  #endif
 
   ruuvi_gw_mqtt_client = esp_mqtt_client_init(&mqtt_cfg);
   esp_mqtt_client_register_event(ruuvi_gw_mqtt_client, ESP_EVENT_ANY_ID, 

@@ -63,6 +63,10 @@ static void ruuvi_gw_bluetooth_gap_cb(esp_gap_ble_cb_event_t event,
                   res->scan_rst.bda[5]);
                measurement.temperature = ((res->scan_rst.ble_adv[8] << 8) |
                 res->scan_rst.ble_adv[9]) * 0.005;
+
+               if(measurement.temperature > 163.835)
+                measurement.temperature -= 327.67;
+
                measurement.humidity = ((res->scan_rst.ble_adv[10] << 8) |
                 res->scan_rst.ble_adv[11]) * 0.0025;
                measurement.pressure = (((res->scan_rst.ble_adv[12] << 8) |

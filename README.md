@@ -30,15 +30,32 @@ by a more recognizable device name by adding a line to `ethers` file.
 
 The log should look like this:
 
-    I (6102) ruuvi-gw-bluetooth: Device Address: C0:09:D8:69:A8:01
-    I (6102) ruuvi-gw-bluetooth: Device Name:    kitchen
-    I (6112) ruuvi-gw-bluetooth: Temperature:    22.06 C
-    I (6112) ruuvi-gw-bluetooth: Humidity:       26.26 %
-    I (9412) ruuvi-gw-bluetooth: 
-    I (9412) ruuvi-gw-bluetooth: Device Address: EE:57:0F:54:B7:94
-    I (9412) ruuvi-gw-bluetooth: Device Name:    bedroom
-    I (9412) ruuvi-gw-bluetooth: Temperature:    22.26 C
-    I (9422) ruuvi-gw-bluetooth: Humidity:       24.96 %
+    I (7317) ruuvi-gw-mqtt: Device Address: D4:2C:7F:62:4E:63
+    I (7317) ruuvi-gw-mqtt: Device Name:    kitchen
+    I (7327) ruuvi-gw-mqtt: Temperature:    16.71 C
+    I (7327) ruuvi-gw-mqtt: Humidity:       44.80 %
+    I (7337) ruuvi-gw-mqtt: Pressure:       973 hPa
+    I (7337) ruuvi-gw-mqtt: Acceleration X: -0.016 G
+    I (7347) ruuvi-gw-mqtt: Acceleration Y: -0.028 G
+    I (7347) ruuvi-gw-mqtt: Acceleration Z: 1.028 G
+    I (7357) ruuvi-gw-mqtt: Battery:        2.967 V
+    I (7357) ruuvi-gw-mqtt: TX Power:       4 dBm
+    I (7367) ruuvi-gw-mqtt: Moves:          70
+    I (7367) ruuvi-gw-mqtt: Sequence:       49685
+    I (7367) ruuvi-gw-mqtt:
+    I (9427) ruuvi-gw-mqtt: Device Address: FE:5F:48:FB:C6:89
+    I (9427) ruuvi-gw-mqtt: Device Name:    bedroom
+    I (9427) ruuvi-gw-mqtt: Temperature:    20.42 C
+    I (9437) ruuvi-gw-mqtt: Humidity:       45.36 %
+    I (9437) ruuvi-gw-mqtt: Pressure:       973 hPa
+    I (9447) ruuvi-gw-mqtt: Acceleration X: 0.048 G
+    I (9447) ruuvi-gw-mqtt: Acceleration Y: 0.012 G
+    I (9457) ruuvi-gw-mqtt: Acceleration Z: 0.968 G
+    I (9457) ruuvi-gw-mqtt: Battery:        2.865 V
+    I (9467) ruuvi-gw-mqtt: TX Power:       4 dBm
+    I (9467) ruuvi-gw-mqtt: Moves:          211
+    I (9477) ruuvi-gw-mqtt: Sequence:       56059
+
 
 ## License
 

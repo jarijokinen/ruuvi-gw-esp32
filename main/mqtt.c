@@ -56,11 +56,23 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
         ESP_LOGI(TAG, "Device Name:    %s", measurement->name);
         ESP_LOGI(TAG, "Temperature:    %.2f C", measurement->temperature);
         ESP_LOGI(TAG, "Humidity:       %.2f %%", measurement->humidity);
-        ESP_LOGI(TAG, "Pressure:       %d hPa", measurement->pressure);
+        ESP_LOGI(TAG, "Pressure:       %d hPa", measurement->pressure/100);
+        ESP_LOGI(TAG, "Acceleration X: %.3f G", measurement->acceleration_x);
+        ESP_LOGI(TAG, "Acceleration Y: %.3f G", measurement->acceleration_y);
+        ESP_LOGI(TAG, "Acceleration Z: %.3f G", measurement->acceleration_z);
+        ESP_LOGI(TAG, "Battery:        %.3f V", measurement->battery);
+        ESP_LOGI(TAG, "TX Power:       %d dBm", measurement->txpower);
         ESP_LOGI(TAG, "Moves:          %d", measurement->moves);
+        ESP_LOGI(TAG, "Sequence:       %d", measurement->sequence);
     
         char topic[100];
-        char data[10];
+        char data[20];
+
+        sprintf(topic, "%s/%s/mac", CONFIG_RUUVI_GW_MQTT_TOPIC,
+            measurement->name);
+        sprintf(data, "%s", measurement->bda);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
 
         sprintf(topic, "%s/%s/temperature", CONFIG_RUUVI_GW_MQTT_TOPIC, 
             measurement->name);
@@ -76,13 +88,49 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
 
         sprintf(topic, "%s/%s/pressure", CONFIG_RUUVI_GW_MQTT_TOPIC,
             measurement->name);
-        sprintf(data, "%d", measurement->pressure);
+        sprintf(data, "%d", measurement->pressure/100);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
+
+        sprintf(topic, "%s/%s/acceleration_x", CONFIG_RUUVI_GW_MQTT_TOPIC,
+            measurement->name);
+        sprintf(data, "%.3f", measurement->acceleration_x);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
+
+        sprintf(topic, "%s/%s/acceleration_y", CONFIG_RUUVI_GW_MQTT_TOPIC,
+            measurement->name);
+        sprintf(data, "%.3f", measurement->acceleration_y);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
+
+        sprintf(topic, "%s/%s/acceleration_z", CONFIG_RUUVI_GW_MQTT_TOPIC,
+            measurement->name);
+        sprintf(data, "%.3f", measurement->acceleration_z);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
+
+        sprintf(topic, "%s/%s/battery", CONFIG_RUUVI_GW_MQTT_TOPIC,
+            measurement->name);
+        sprintf(data, "%.3f", measurement->battery);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
+
+        sprintf(topic, "%s/%s/txpower", CONFIG_RUUVI_GW_MQTT_TOPIC,
+            measurement->name);
+        sprintf(data, "%.d", measurement->txpower);
         esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
             CONFIG_RUUVI_GW_MQTT_RETAIN);
 
         sprintf(topic, "%s/%s/moves", CONFIG_RUUVI_GW_MQTT_TOPIC,
             measurement->name);
         sprintf(data, "%d", measurement->moves);
+        esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
+            CONFIG_RUUVI_GW_MQTT_RETAIN);
+
+        sprintf(topic, "%s/%s/sequence", CONFIG_RUUVI_GW_MQTT_TOPIC,
+            measurement->name);
+        sprintf(data, "%d", measurement->sequence);
         esp_mqtt_client_publish(client, topic, data, 0, CONFIG_RUUVI_GW_MQTT_QOS,
             CONFIG_RUUVI_GW_MQTT_RETAIN);
       }

@@ -61,13 +61,36 @@ static void ruuvi_gw_bluetooth_gap_cb(esp_gap_ble_cb_event_t event,
                   res->scan_rst.bda[3],
                   res->scan_rst.bda[4],
                   res->scan_rst.bda[5]);
-               measurement.temperature = ((res->scan_rst.ble_adv[8] << 8) |
+              measurement.temperature = ((res->scan_rst.ble_adv[8] << 8) |
                 res->scan_rst.ble_adv[9]) * 0.005;
-               measurement.humidity = ((res->scan_rst.ble_adv[10] << 8) |
+
+              if(measurement.temperature > 163.836)
+                measurement.temperature -= 327.68;
+
+              measurement.humidity = ((res->scan_rst.ble_adv[10] << 8) |
                 res->scan_rst.ble_adv[11]) * 0.0025;
-               measurement.pressure = (((res->scan_rst.ble_adv[12] << 8) |
-                res->scan_rst.ble_adv[13]) + 50000) / 100;
-               measurement.moves = res->scan_rst.ble_adv[22];
+              measurement.pressure = (((res->scan_rst.ble_adv[12] << 8) |
+                res->scan_rst.ble_adv[13]) + 50000);
+              measurement.acceleration_x = ((res->scan_rst.ble_adv[14] << 8) |
+                res->scan_rst.ble_adv[15]) / 1000.0;
+              measurement.acceleration_y = ((res->scan_rst.ble_adv[16] << 8) |
+                res->scan_rst.ble_adv[17]) / 1000.0;
+              measurement.acceleration_z = ((res->scan_rst.ble_adv[18] << 8) |
+                res->scan_rst.ble_adv[19]) / 1000.0;
+
+              if(measurement.acceleration_x > 32.767)
+                measurement.acceleration_x -= 65.536;
+              if(measurement.acceleration_y > 32.767)
+                measurement.acceleration_y -= 65.536;
+              if(measurement.acceleration_z > 32.767)
+                measurement.acceleration_z -= 65.536;
+
+              measurement.battery = (((res->scan_rst.ble_adv[20] << 3) |
+                (res->scan_rst.ble_adv[21] >> 5))  + 1600) / 1000.0;
+              measurement.txpower = ((res->scan_rst.ble_adv[21] & 0x1f) * 2) - 40;
+              measurement.moves = res->scan_rst.ble_adv[22];
+              measurement.sequence = ((res->scan_rst.ble_adv[23] << 8) |
+                res->scan_rst.ble_adv[24]);
 
               ruuvi_gw_mqtt_add_measurement(measurement);
 

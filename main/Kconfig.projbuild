@@ -1,10 +1,57 @@
 menu "RuuviTag Gateway Configuration"
 
-    config RUUVI_GW_WIFI_SSID
-      string "WiFi SSID"
+    orsource "$IDF_PATH/examples/common_components/env_caps/$IDF_TARGET/Kconfig.env_caps"
 
-    config RUUVI_GW_WIFI_PSK
-      string "WiFi Password"
+    config RUUVI_GW_USE_WIFI
+      default y
+      bool "Use WiFi"
+
+    if RUUVI_GW_USE_WIFI
+      config RUUVI_GW_WIFI_SSID
+        string "WiFi SSID"
+
+      config RUUVI_GW_WIFI_PSK
+        string "WiFi Password"
+    endif # RUUVI_GW_USE_WIFI
+
+    config RUUVI_GW_USE_ETHERNET
+      depends on SOC_EMAC_SUPPORTED
+      select ETH_USE_ESP32_MAC
+      default n
+      bool "Internal Ethernet MAC"
+      help
+          Use internal Ethernet MAC controller.
+
+    if RUUVI_GW_USE_ETHERNET
+      config RUUVI_GW_ETH_MDC_GPIO
+        int "SMI MDC GPIO number"
+        range ENV_GPIO_RANGE_MIN ENV_GPIO_OUT_RANGE_MAX
+        default 23
+        help
+            Set the GPIO number used by SMI MDC.
+
+      config RUUVI_GW_ETH_MDIO_GPIO
+        int "SMI MDIO GPIO number"
+        range ENV_GPIO_RANGE_MIN ENV_GPIO_OUT_RANGE_MAX
+        default 18
+        help
+            Set the GPIO number used by SMI MDIO.
+
+      config RUUVI_GW_ETH_PHY_RST_GPIO
+        int "PHY Reset GPIO number"
+        range -1 ENV_GPIO_OUT_RANGE_MAX
+        default 5
+        help
+            Set the GPIO number used to reset PHY chip.
+            Set to -1 to disable PHY chip hardware reset.
+
+      config RUUVI_GW_ETH_PHY_ADDR
+        int "PHY Address"
+        range 0 31
+        default 1
+        help
+            Set PHY address according your board schematic.
+    endif # RUUVI_GW_USE_ETHERNET
 
     config RUUVI_GW_MQTT_CLIENTCERT
       bool "MQTT TLS Client Certificates"

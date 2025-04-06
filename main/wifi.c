@@ -10,6 +10,11 @@
 #include <lwip/sys.h>
 #include <sdkconfig.h>
 
+#ifndef CONFIG_RUUVI_GW_USE_WIFI
+#define CONFIG_RUUVI_GW_WIFI_SSID	""
+#define CONFIG_RUUVI_GW_WIFI_PSK	""
+#endif
+
 static const char *TAG = "ruuvi-gw-wifi";
 
 static EventGroupHandle_t s_ruuvi_gw_wifi_event_group;

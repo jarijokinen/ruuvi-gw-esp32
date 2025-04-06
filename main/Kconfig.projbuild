@@ -81,6 +81,12 @@ menu "RuuviTag Gateway Configuration"
       default 30
       help
           MQTT timeout in seconds
+
+    config RUUVI_GW_IGNORE_UNKNOWNTAGS
+      bool "Ignore unknown RuuviTags"
+      default n
+      help
+          Ignore unknown RuuviTags not in ethers
     
     config RUUVI_GW_POLLING_INTERVAL
       int "Polling Interval"

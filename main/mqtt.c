@@ -155,8 +155,14 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base,
 
 void ruuvi_gw_mqtt_add_measurement(measurement_data_t measurement)
 {
-  if(ruuvi_gw_ether_to_name(measurement.bda, measurement.name, sizeof(measurement.name)) != 0)
-      strcpy(measurement.name, measurement.bda);
+  if(ruuvi_gw_ether_to_name(measurement.bda, measurement.name, sizeof(measurement.name)) != 0) {
+#if RUUVI_GW_IGNORE_UNKNOWNTAGS
+    ESP_LOGI(TAG, "Ignoring unknown RuuviTag %s", measurement.bda);
+    return;
+#else
+    strcpy(measurement.name, measurement.bda);
+#endif
+  }
 
   xRingbufferSend(measurements, &measurement, sizeof(measurement), 
       pdMS_TO_TICKS(1000));
